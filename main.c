@@ -92,13 +92,27 @@ int main(int argc, char *argv[])
     printf("execution time of append() : %lf sec\n", cpu_time1);
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
-    /*
+#ifdef OPT
+
     entry *pp = pHead;
-    for (int j=0; j<128; j++) {
-    	printf("%p\n", pp);
-    	pp = pp ->pNext;
+    for (int j=0; j<8; j++) {
+        printf("%p\n", pp);
+        /*
+        printf("detail: posittion in %p, size is %ld\n", &(pp->detail), sizeof(pp->detail));
+        printf("pNext: posittion in %p, size is %ld\n", &(pp->pNext), sizeof(pp->pNext));
+        printf("lastName: posittion in %p, size is %ld\n", &(pp->lastName), sizeof(pp->lastName));
+        i=0;
+        while (i != 48) {
+            printf("%x ", (__int16_t)pp->lastName[i]);
+            i++;
+        }
+        printf("\n");
+        */
+        pp = pp->pNext;
     }
-    */
+    free(pp);
+
+#endif
 
     if (pHead->pNext) free(pHead->pNext);
     free(pHead);
