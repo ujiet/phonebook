@@ -23,7 +23,7 @@ typedef struct __PHONE_BOOK_DETAIL_ENTRY {
 typedef struct __PHONE_BOOK_ENTRY {
     char lastName[MAX_LAST_NAME_SIZE];
     struct __PHONE_BOOK_ENTRY *pNext;
-    detailEntry *detail;
+    //detailEntry *detail;
 } entry;
 
 entry *findName(char lastName[], entry *pHead);

@@ -14,6 +14,8 @@
 
 #define DICT_FILE "./dictionary/words.txt"
 
+
+
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
     struct timespec diff;
@@ -35,12 +37,14 @@ int main(int argc, char *argv[])
     struct timespec start, end;
     double cpu_time1, cpu_time2;
 
+
     /* check file opening */
     fp = fopen(DICT_FILE, "r");
     if (fp == NULL) {
         printf("cannot open the file\n");
         return -1;
     }
+
 
     /* build the entry */
     entry *pHead, *e;
@@ -49,16 +53,48 @@ int main(int argc, char *argv[])
     e = pHead;
     e->pNext = NULL;
 
+
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
+    printf("clear I-cache!!!!!!!\n");
 #endif
+
+
     clock_gettime(CLOCK_REALTIME, &start);
+    /*
+    #ifdef OPT
+        //--- node for alignment
+        fgets(line, sizeof(line), fp);
+        while (line[i] != '\0')
+            i++;
+        line[i - 1] = '\0';
+        i = 0;
+        pHead = (entry *) malloc(sizeof(entry)+32);
+        e = (entry *)(((int64_t)pHead+64) & ~(int64_t)0x3f);
+        e->pNext = NULL;
+
+        //--- store original pHead address
+        void *orig_pHead = pHead;
+        pHead = e;
+    #endif
+    */
+
+    //entry *padding = (entry*) malloc(sizeof(entry));
+    //char *padding;
+    //int paddingflag = 1;
+
+    int n = 8;
     while (fgets(line, sizeof(line), fp)) {
         while (line[i] != '\0')
             i++;
         line[i - 1] = '\0';
         i = 0;
         e = append(line, e);
+
+        if (n) {
+            n--;
+            //printf("e:  %p\n", &pHead);
+        }
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
@@ -79,6 +115,7 @@ int main(int argc, char *argv[])
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
+
     /* compute the execution time */
     clock_gettime(CLOCK_REALTIME, &start);
     findName(input, e);
@@ -112,10 +149,20 @@ int main(int argc, char *argv[])
     }
     free(pp);
 
+    //printf("padding: %p", &(padding));
+    //free(padding);
+
+#endif
+
+#ifdef OPT
+    /*--- give back pHead */
+//    pHead = (entry *) orig_pHead;
 #endif
 
     if (pHead->pNext) free(pHead->pNext);
     free(pHead);
 
+
     return 0;
 }
+
