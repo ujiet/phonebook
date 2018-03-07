@@ -61,29 +61,7 @@ int main(int argc, char *argv[])
 
 
     clock_gettime(CLOCK_REALTIME, &start);
-    /*
-    #ifdef OPT
-        //--- node for alignment
-        fgets(line, sizeof(line), fp);
-        while (line[i] != '\0')
-            i++;
-        line[i - 1] = '\0';
-        i = 0;
-        pHead = (entry *) malloc(sizeof(entry)+32);
-        e = (entry *)(((int64_t)pHead+64) & ~(int64_t)0x3f);
-        e->pNext = NULL;
 
-        //--- store original pHead address
-        void *orig_pHead = pHead;
-        pHead = e;
-    #endif
-    */
-
-    //entry *padding = (entry*) malloc(sizeof(entry));
-    //char *padding;
-    //int paddingflag = 1;
-
-    int n = 8;
     while (fgets(line, sizeof(line), fp)) {
         while (line[i] != '\0')
             i++;
@@ -91,10 +69,6 @@ int main(int argc, char *argv[])
         i = 0;
         e = append(line, e);
 
-        if (n) {
-            n--;
-            //printf("e:  %p\n", &pHead);
-        }
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
@@ -130,38 +104,16 @@ int main(int argc, char *argv[])
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
 #ifdef OPT
-
     entry *pp = pHead;
     for (int j=0; j<8; j++) {
         printf("%p\n", pp);
-        /*
-        printf("detail: posittion in %p, size is %ld\n", &(pp->detail), sizeof(pp->detail));
-        printf("pNext: posittion in %p, size is %ld\n", &(pp->pNext), sizeof(pp->pNext));
-        printf("lastName: posittion in %p, size is %ld\n", &(pp->lastName), sizeof(pp->lastName));
-        i=0;
-        while (i != 48) {
-            printf("%x ", (__int16_t)pp->lastName[i]);
-            i++;
-        }
-        printf("\n");
-        */
         pp = pp->pNext;
     }
     free(pp);
-
-    //printf("padding: %p", &(padding));
-    //free(padding);
-
-#endif
-
-#ifdef OPT
-    /*--- give back pHead */
-//    pHead = (entry *) orig_pHead;
 #endif
 
     if (pHead->pNext) free(pHead->pNext);
     free(pHead);
-
 
     return 0;
 }
