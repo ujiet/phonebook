@@ -37,14 +37,12 @@ int main(int argc, char *argv[])
     struct timespec start, end;
     double cpu_time1, cpu_time2;
 
-
     /* check file opening */
     fp = fopen(DICT_FILE, "r");
     if (fp == NULL) {
         printf("cannot open the file\n");
         return -1;
     }
-
 
     /* build the entry */
     entry *pHead, *e;
@@ -53,12 +51,10 @@ int main(int argc, char *argv[])
     e = pHead;
     e->pNext = NULL;
 
-
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
     printf("clear I-cache!!!!!!!\n");
 #endif
-
 
     clock_gettime(CLOCK_REALTIME, &start);
 
@@ -75,7 +71,6 @@ int main(int argc, char *argv[])
 
     /* close file as soon as possible */
     fclose(fp);
-
     e = pHead;
 
     /* the givn last name to find */
@@ -117,4 +112,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
