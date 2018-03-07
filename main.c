@@ -14,8 +14,6 @@
 
 #define DICT_FILE "./dictionary/words.txt"
 
-
-
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
     struct timespec diff;
@@ -53,9 +51,7 @@ int main(int argc, char *argv[])
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
-    printf("clear I-cache!!!!!!!\n");
 #endif
-
     clock_gettime(CLOCK_REALTIME, &start);
 
     while (fgets(line, sizeof(line), fp)) {
@@ -64,7 +60,6 @@ int main(int argc, char *argv[])
         line[i - 1] = '\0';
         i = 0;
         e = append(line, e);
-
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
@@ -84,7 +79,6 @@ int main(int argc, char *argv[])
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
-
     /* compute the execution time */
     clock_gettime(CLOCK_REALTIME, &start);
     findName(input, e);
@@ -97,15 +91,6 @@ int main(int argc, char *argv[])
 
     printf("execution time of append() : %lf sec\n", cpu_time1);
     printf("execution time of findName() : %lf sec\n", cpu_time2);
-
-#ifdef OPT
-    entry *pp = pHead;
-    for (int j=0; j<8; j++) {
-        printf("%p\n", pp);
-        pp = pp->pNext;
-    }
-    free(pp);
-#endif
 
     if (pHead->pNext) free(pHead->pNext);
     free(pHead);
